@@ -59,18 +59,54 @@
   .end { padding:40px 0; text-align:center; color:var(--mute); }
   footer { max-width:1100px; margin:0 auto 40px; padding:16px 20px 0; border-top:1px solid var(--line); color:var(--mute); font-size:13px; line-height:1.6; }
   footer li.bad { color:var(--red); }
-  @media (max-width:640px) { main.list .item { flex-direction:column; gap:10px; } main.list .pic { flex-basis:auto; height:190px; } h1 { font-size:24px; } }
+  .controls { display:contents; }
+  #filtersBtn { display:none; }
+
+  /* phone: compact header, one swipeable row of tags, news-app style list */
+  @media (max-width:700px) {
+    body { font-size:16px; }
+    .bar { padding:8px 12px 6px; }
+    .row { gap:8px; flex-wrap:nowrap; }
+    h1 { font-size:21px; margin:0; white-space:nowrap; }
+    input { min-width:0; padding:7px 9px; font-size:16px; }
+    #filtersBtn { display:block; flex:none; padding:7px 10px; }
+    #filtersBtn[aria-expanded="true"] { background:var(--text); color:#fff; border-color:var(--text); }
+    .controls { display:none; }
+    .controls.open { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding-top:8px; flex:0 0 100%; }
+    .controls.open select { width:100%; min-width:0; }
+    .controls.open .view { display:flex; gap:8px; }
+    .controls.open .view button { flex:1; }
+    .row:has(.controls.open) { flex-wrap:wrap; }
+    #tags { flex-wrap:nowrap; overflow-x:auto; margin:8px -12px 0; padding:0 12px 2px; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+    #tags::-webkit-scrollbar { display:none; }
+    .chip { flex:none; padding:5px 11px; font-size:13.5px; }
+    #info { font-size:12px; margin-top:5px; }
+    main { padding:0 12px 30px; }
+    main.list .item { gap:12px; padding:14px 0; flex-direction:row-reverse; align-items:flex-start; }
+    main.list .pic { flex:0 0 104px; height:78px; }
+    main.list .pic.none { font-size:10px; padding:4px; }
+    main.list .title { font-size:16.5px; line-height:1.3; margin-bottom:4px; }
+    main.list .text { font-size:14px; -webkit-line-clamp:2; margin-bottom:4px; line-height:1.45; }
+    main.list .t { display:none; }
+    .meta { font-size:11px; margin-bottom:3px; }
+    .more { font-size:13px; }
+    main.grid { grid-template-columns:1fr; gap:14px; padding-top:14px; }
+    footer { padding:14px 12px 0; }
+  }
 </style>
 </head>
 <body>
 <header><div class="bar">
   <div class="row">
     <h1><span>AI</span> News</h1>
-    <input id="q" placeholder="Search, e.g. runway, claude, suno">
+    <input id="q" type="search" placeholder="Search, e.g. runway, claude, suno">
+    <button id="filtersBtn" aria-expanded="false">Filters</button>
+    <div class="controls">
     <select id="when"><option value="0">Any time</option><option value="1">Today</option><option value="3">Last 3 days</option><option value="7" selected>This week</option></select>
     <select id="src"><option value="">All sources</option></select>
     <span class="view"><button data-v="list">☰ List</button> <button data-v="grid">▦ Tiles</button></span>
     <button id="refresh">↻ Refresh</button>
+    </div>
   </div>
   <div id="tags"></div>
   <div id="info">Loading…</div>
@@ -103,7 +139,8 @@ function render() {
   const base = data.items.filter((i) => (!days || (i.date && Date.now() - new Date(i.date) < days * 864e5)) && (!src || i.source === src) && (!q || (i.title + " " + i.text + " " + i.source).toLowerCase().includes(q)));
   const counts = { Latest: base.length };
   base.forEach((i) => i.tags.forEach((t) => (counts[t] = (counts[t] || 0) + 1)));
-  const names = ["Latest", ...Object.keys(counts).filter((k) => k !== "Latest").sort((a, b) => counts[b] - counts[a])];
+  const LAST = ["Other", "Dutch"];
+  const names = ["Latest", ...Object.keys(counts).filter((k) => k !== "Latest" && !LAST.includes(k)).sort((a, b) => counts[b] - counts[a]), ...LAST.filter((k) => counts[k])];
   if (!counts[active]) active = "Latest";
   $("#tags").innerHTML = names.map((n) => `<span class="chip ${n === active ? "on" : ""}" data-t="${esc(n)}">${esc(n)}<span>${counts[n] || 0}</span></span>`).join("");
   const all = active === "Latest" ? base : base.filter((i) => i.tags.includes(active));
@@ -133,6 +170,7 @@ $("#q").oninput = $("#when").onchange = $("#src").onchange = reset;
 $("#list").onclick = (e) => { if (e.target.id === "moreBtn") { shown += 60; render(); } };
 document.querySelector(".view").onclick = (e) => { const b = e.target.closest("button"); if (b) { view = b.dataset.v; try { localStorage.setItem("view", view); } catch {} render(); } };
 $("#refresh").onclick = () => load("?refresh");
+$("#filtersBtn").onclick = () => { const open = $(".controls").classList.toggle("open"); $("#filtersBtn").setAttribute("aria-expanded", open); };
 
 // the first stories are already inside the page: show them at once, load the rest right after
 const FIRST = /*FIRST*/null;

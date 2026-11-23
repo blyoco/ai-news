@@ -316,7 +316,7 @@ function parse(xml, source, filter, max = 60) {
       text = "";
     }
     if (source.startsWith("YT ")) { src = source.slice(3) + " · YouTube"; const vid = tag(b, "yt:videoId"); img = vid ? `https://i.ytimg.com/vi/${vid.trim()}/hqdefault.jpg` : img; text = strip(tag(b, "media:description") ?? "").slice(0, 280); }
-    if (source.startsWith("BS ")) { src = source.slice(3) + " · Bluesky"; if (!title) title = text.length > 140 ? text.slice(0, 137).replace(/\s+\S*$/, "") + "…" : text; }
+    if (source.startsWith("BS ")) { src = source.slice(3) + " · Bluesky"; if (!title) { title = text.length > 110 ? text.slice(0, 107).replace(/\s+\S*$/, "") + "…" : text; text = text.length > 110 ? text : ""; } }
     if (source.startsWith("NL ")) src = source.slice(3);
     if (source.startsWith("r/")) text = text.replace(/submitted by .*$/i, "").trim();
     if (!title || !link) continue;
