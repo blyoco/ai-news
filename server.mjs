@@ -6,7 +6,7 @@ import path from "node:path";
 
 const PORT = 3333, ROOT = import.meta.dirname, CACHE_MIN = 15;
 const gn = (q) => `https://news.google.com/rss/search?q=${encodeURIComponent(q + " when:7d")}&hl=en-US&gl=US&ceid=US:en`;
-const bn = (q) => `https://www.bing.com/news/search?q=${encodeURIComponent(q)}&format=rss&setmkt=en-US&setlang=en`;
+const bn = (q) => `https://www.bing.com/news/search?q=${encodeURIComponent(q)}&format=rss&setmkt=en-US&setlang=en&qft=sortbydate%3d%221%22`;
 const bnl = (q) => `https://www.bing.com/news/search?q=${encodeURIComponent(q)}&format=rss&setmkt=nl-NL`;
 const gnl = (q) => `https://news.google.com/rss/search?q=${encodeURIComponent(q + " when:7d")}&hl=nl&gl=NL&ceid=NL:nl`;
 
@@ -105,6 +105,104 @@ const FEEDS = [
   ["Bing", bn("AI browser")],
   ["Bing", bn("AI research breakthrough")],
   ["Bing", bn("generative AI")],
+  // YouTube: AI-makers en de AI-bedrijven zelf
+  ["YT Theoretically Media", "https://www.youtube.com/feeds/videos.xml?channel_id=UC9Ryt3XOGYBoAJVsBHNGDzA"],
+  ["YT Curious Refuge", "https://www.youtube.com/feeds/videos.xml?channel_id=UClnFtyUEaxQOCd1s5NKYGFA"],
+  ["YT MattVidPro", "https://www.youtube.com/feeds/videos.xml?channel_id=UC5Wz4fFacYuON6IKbhSa7Zw"],
+  ["YT Olivio Sarikas", "https://www.youtube.com/feeds/videos.xml?channel_id=UCCKx8mAHiFus-XYQLy_WnaA"],
+  ["YT Nerdy Rodent", "https://www.youtube.com/feeds/videos.xml?channel_id=UC4-5v-f-xKnbi1yaAuRSi_w"],
+  ["YT Sebastian Kamph", "https://www.youtube.com/feeds/videos.xml?channel_id=UCvKqTb-65iAmXK59sFNKINQ"],
+  ["YT Prompt Muse", "https://www.youtube.com/feeds/videos.xml?channel_id=UCP2RXiW0zYz7N2CnR9ANRCQ"],
+  ["YT Matt Wolfe", "https://www.youtube.com/feeds/videos.xml?channel_id=UChpleBmo18P08aKCIgti38g"],
+  ["YT AI Explained", "https://www.youtube.com/feeds/videos.xml?channel_id=UCNJ1Ymd5yFuUPtn21xtRbbw"],
+  ["YT Two Minute Papers", "https://www.youtube.com/feeds/videos.xml?channel_id=UCbfYPyITQ-7l4upoX8nvctg", true],
+  ["YT Wes Roth", "https://www.youtube.com/feeds/videos.xml?channel_id=UCqcbQf6yw5KzRoDDcZ_wBSw"],
+  ["YT Matthew Berman", "https://www.youtube.com/feeds/videos.xml?channel_id=UCawZsQWqfGSbCI5yjkdVkTA"],
+  ["YT bycloud", "https://www.youtube.com/feeds/videos.xml?channel_id=UCgfe2ooZD3VJPB6aJAnuQng"],
+  ["YT All About AI", "https://www.youtube.com/feeds/videos.xml?channel_id=UCR9j1jqqB5Rse69wjUnbYwA"],
+  ["YT The AI Advantage", "https://www.youtube.com/feeds/videos.xml?channel_id=UCHhYXsLBEVVnbvsq57n1MTQ"],
+  ["YT AICodeKing", "https://www.youtube.com/feeds/videos.xml?channel_id=UC0m81bQuthaQZmFbXEY9QSw"],
+  ["YT Cole Medin", "https://www.youtube.com/feeds/videos.xml?channel_id=UCMwVTLZIRRUyyVrkjDpn4pA"],
+  ["YT IndyDevDan", "https://www.youtube.com/feeds/videos.xml?channel_id=UC_x36zCEGilGpB1m-V4gmjg"],
+  ["YT Fireship", "https://www.youtube.com/feeds/videos.xml?channel_id=UCsBjURrPoezykLs9EqgamOA", true],
+  ["YT WorldofAI", "https://www.youtube.com/feeds/videos.xml?channel_id=UC2WmuBuFq6gL08QYG-JjXKw"],
+  ["YT Runway", "https://www.youtube.com/feeds/videos.xml?channel_id=UCUBqu_z5uP0AZhYtuyFZB3g"],
+  ["YT Luma AI", "https://www.youtube.com/feeds/videos.xml?channel_id=UC45T0I4p7A3dI0XvhivafZQ"],
+  ["YT Google DeepMind", "https://www.youtube.com/feeds/videos.xml?channel_id=UCP7jMXSY2xbc3KCAE0MHQ-A"],
+  ["YT OpenAI", "https://www.youtube.com/feeds/videos.xml?channel_id=UCXZCJLdBC09xxGZ6gcdrc6A"],
+  ["YT Anthropic", "https://www.youtube.com/feeds/videos.xml?channel_id=UCrDwWp7EBBv4NwvScIpBDOA"],
+  ["YT Kling AI", "https://www.youtube.com/feeds/videos.xml?channel_id=UCScFj8erJ91w8-jzNrNzrDA"],
+  ["YT Higgsfield AI", "https://www.youtube.com/feeds/videos.xml?channel_id=UCh13OyDSm-Kb8ij3yZArtFg"],
+  ["YT Pika", "https://www.youtube.com/feeds/videos.xml?channel_id=UCv9NoFm48d6-4aCk4Eszhog"],
+  ["YT Tao Prompts", "https://www.youtube.com/feeds/videos.xml?channel_id=UCc1qMq2UBJD9cSKbeBwGoZQ"],
+  ["YT TheAIGRID", "https://www.youtube.com/feeds/videos.xml?channel_id=UCbY9xX3_jW5c2fjlZVBI4cg"],
+  // nieuwsbrieven
+  ["NL The Rundown AI", "https://www.therundown.ai/feed"],
+  ["NL Ben's Bites", "https://www.bensbites.com/feed"],
+  ["NL Latent Space", "https://latent.space/feed"],
+  ["NL Import AI", "https://importai.substack.com/feed"],
+  ["NL One Useful Thing", "https://www.oneusefulthing.org/feed"],
+  ["NL Last Week in AI", "https://lastweekin.ai/feed"],
+  ["NL Interconnects", "https://www.interconnects.ai/feed"],
+  ["NL Understanding AI", "https://www.understandingai.org/feed"],
+  ["NL TLDR AI", "https://tldr.tech/api/rss/ai"],
+  ["NL The Neuron", "https://www.theneurondaily.com/feed"],
+  ["NL AI Breakfast", "https://aibreakfast.beehiiv.com/feed"],
+  ["NL Superhuman AI", "https://www.superhuman.ai/feed"],
+  // social: Bluesky, Product Hunt
+  ["BS Simon Willison", "https://bsky.app/profile/simonwillison.net/rss", true],
+  ["BS Ethan Mollick", "https://bsky.app/profile/emollick.bsky.social/rss", true],
+  ["BS Nathan Lambert", "https://bsky.app/profile/natolambert.bsky.social/rss", true],
+  ["BS Gary Marcus", "https://bsky.app/profile/garymarcus.bsky.social/rss", true],
+  ["BS Hugging Face", "https://bsky.app/profile/huggingface.bsky.social/rss", true],
+  ["BS Jeremy Howard", "https://bsky.app/profile/howard.fm/rss", true],
+  ["BS Kevin Kwok", "https://bsky.app/profile/kevinkwok.bsky.social/rss", true],
+  ["BS Cristóbal Valenzuela", "https://bsky.app/profile/c.bsky.social/rss", true],
+  ["Product Hunt", "https://www.producthunt.com/feed?category=artificial-intelligence"],
+  // video, animatie, VFX en beeld (alleen AI-berichten)
+  ["Animation Magazine", "https://www.animationmagazine.net/feed/", true],
+  ["fxguide", "https://www.fxguide.com/feed/", true],
+  ["befores & afters", "https://beforesandafters.com/feed/", true],
+  ["ProVideo Coalition", "https://www.provideocoalition.com/feed/", true],
+  ["CineD", "https://www.cined.com/feed/", true],
+  ["PetaPixel", "https://petapixel.com/feed/", true],
+  ["Creative Bloq", "https://www.creativebloq.com/feeds/all", true],
+  ["Digital Trends", "https://www.digitaltrends.com/feed/", true],
+  ["Bing", bn("Runway Gen AI video")],
+  ["Bing", bn("Kling video model")],
+  ["Bing", bn("Veo 3 video")],
+  ["Bing", bn("Sora 2")],
+  ["Bing", bn("AI music video")],
+  ["Bing", bn("AI animated film")],
+  ["Bing", bn("AI generated commercial")],
+  ["Bing", bn("Wan video model")],
+  ["Bing", bn("LTX Studio")],
+  ["Bing", bn("Hedra AI")],
+  ["Bing", bn("Moonvalley AI")],
+  ["Bing", bn("Luma Ray video")],
+  ["Bing", bn("Pika AI")],
+  ["Bing", bn("Minimax Hailuo video")],
+  ["Bing", bn("AI VFX")],
+  ["Bing", bn("AI filmmaker")],
+  ["Bing", bn("Midjourney video")],
+  ["Bing", bn("Adobe Firefly video")],
+  ["Bing", bn("text to video model")],
+  ["Bing", bn("AI animation studio")],
+  ["Bing", bn("AI cartoon")],
+  ["Bing", bn("Hollywood AI")],
+  ["Bing", bn("AI film festival")],
+  ["Bing", bn("AI avatar")],
+  ["Bing", bn("AI lip sync")],
+  ["Bing", bn("AI 3D animation")],
+  ["Bing", bn("Gaussian splatting")],
+  ["Bing", bn("AI motion graphics")],
+  ["Bing", bn("Higgsfield")],
+  ["Bing", bn("Seedance ByteDance")],
+  ["Bing", bn("Freepik AI")],
+  ["Bing", bn("Krea video")],
+  ["Bing", bn("Topaz video AI")],
+  ["Bing", bn("AI video editing")],
+  ["Bing", bn("CapCut AI")],
   ["Bing NL", bnl("kunstmatige intelligentie")],
   ["Bing NL", bnl("AI")],
 ];
@@ -158,12 +256,17 @@ function parse(xml, source, filter, max = 60) {
       const m = title.match(/^(.*) - ([^-]+)$/); if (m) { title = m[1]; src = m[2].trim(); }
       text = "";
     }
+    if (source.startsWith("YT ")) { src = source.slice(3) + " · YouTube"; const vid = tag(b, "yt:videoId"); img = vid ? `https://i.ytimg.com/vi/${vid.trim()}/hqdefault.jpg` : img; text = strip(tag(b, "media:description") ?? "").slice(0, 280); }
+    if (source.startsWith("BS ")) { src = source.slice(3) + " · Bluesky"; if (!title) title = text.length > 140 ? text.slice(0, 137).replace(/\s+\S*$/, "") + "…" : text; }
+    if (source.startsWith("NL ")) src = source.slice(3);
     if (source.startsWith("r/")) text = text.replace(/submitted by .*$/i, "").trim();
     if (!title || !link) continue;
     if (filter && !AI_RE.test(title + " " + text)) continue;
     const hay = title + " " + text;
     const tags = TAGS.filter(([n, re]) => n === "Dutch" ? source.endsWith("NL") || source === "Bing NL" || source === "Tweakers" : re.test(hay)).map(([n]) => n);
+    const kind = source.startsWith("YT ") ? "YouTube" : source.startsWith("BS ") || source === "Product Hunt" || source === "Hacker News" ? "Social" : source.startsWith("NL ") ? "Newsletters" : null;
     if (!tags.length || (tags.length === 1 && tags[0] === "Dutch")) tags.push("Other");
+    if (kind) tags.unshift(kind);
     out.push({ title, link, text, img: img.startsWith("http") ? img : "", source: src, feed: source, date: isNaN(date) ? null : date.toISOString(), tags });
   }
   return out;
