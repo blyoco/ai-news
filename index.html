@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI News</title>
+<meta name="description" content="All the latest AI news from hundreds of sources, sorted by topic: video and animation, images, music, code, models, agents and more.">
+<style>
+  :root { --bg:#ffffff; --paper:#f6f5f1; --text:#1a1a1a; --mute:#6b6b6b; --line:#e3e1db; --link:#0b4f8a; --red:#c0261d; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:17px/1.55 Georgia, "Times New Roman", serif; }
+  header, .meta, .chip, button, select, input, .more, #info, .t, footer, .pic.none { font-family: system-ui, "Segoe UI", Arial, sans-serif; }
+  header { position:sticky; top:0; z-index:5; background:#fff; border-bottom:1px solid var(--line); }
+  .bar { max-width:1100px; margin:0 auto; padding:12px 20px 8px; }
+  .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  h1 { margin:0 16px 0 0; font:700 30px/1 Georgia, serif; letter-spacing:-.01em; }
+  h1 span { color:var(--red); }
+  input, select, button { background:#fff; color:var(--text); border:1px solid #cfccc4; border-radius:6px; padding:7px 11px; font-size:14px; }
+  input { flex:1; min-width:180px; }
+  button { cursor:pointer; } button:hover { background:var(--paper); }
+  .view button.on { background:var(--text); color:#fff; border-color:var(--text); }
+  #info { color:var(--mute); font-size:13px; margin-top:6px; }
+  #tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+  .chip { border:1px solid var(--line); background:#fff; border-radius:4px; padding:3px 10px; font-size:13px; cursor:pointer; user-select:none; color:#333; }
+  .chip span { color:#999; margin-left:3px; }
+  .chip.on { background:var(--text); border-color:var(--text); color:#fff; } .chip.on span { color:#bbb; }
+
+  main { max-width:1100px; margin:0 auto; padding:8px 20px 40px; }
+  .pic { display:block; overflow:hidden; background:var(--paper); border-radius:4px; }
+  .pic img { width:100%; height:100%; object-fit:cover; display:block; }
+  .pic.none { display:flex; align-items:center; justify-content:center; color:#aaa59a; font-weight:700; font-size:14px; text-align:center; padding:10px; text-decoration:none; }
+
+  /* list: picture left, text right, one below the other */
+  main.list .item { display:flex; gap:22px; padding:22px 0; border-bottom:1px solid var(--line); }
+  main.list .pic { flex:0 0 240px; height:150px; }
+  main.list .txt { flex:1; min-width:0; }
+  main.list .title { font-size:22px; }
+
+  /* tiles: equal cards */
+  main.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:20px; padding-top:20px; }
+  main.grid .item { display:flex; flex-direction:column; border:1px solid var(--line); border-radius:6px; overflow:hidden; background:#fff; }
+  main.grid .pic { height:170px; border-radius:0; flex:none; }
+  main.grid .txt { padding:12px 14px 14px; display:flex; flex-direction:column; flex:1; }
+  main.grid .title { font-size:18px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  main.grid .text { font-size:15px; -webkit-line-clamp:3; }
+  main.grid .foot { margin-top:auto; }
+  main.grid .t { display:none; }
+  main.grid > .end { grid-column:1/-1; }
+
+  .meta { font-size:12px; color:var(--mute); text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px; }
+  .meta b { color:var(--red); font-weight:700; }
+  .title { line-height:1.25; font-weight:700; margin:0 0 6px; }
+  .title a { color:var(--text); text-decoration:none; } .title a:hover { color:var(--link); text-decoration:underline; }
+  .text { color:#3a3a3a; font-size:16.5px; margin:0 0 8px; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
+  .foot { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .more { color:var(--link); font-size:14px; font-weight:600; text-decoration:none; }
+  .more:hover { text-decoration:underline; }
+  .t { font-size:12px; color:#888; }
+  .end { padding:40px 0; text-align:center; color:var(--mute); }
+  footer { max-width:1100px; margin:0 auto 40px; padding:16px 20px 0; border-top:1px solid var(--line); color:var(--mute); font-size:13px; line-height:1.6; }
+  footer li.bad { color:var(--red); }
+  @media (max-width:640px) { main.list .item { flex-direction:column; gap:10px; } main.list .pic { flex-basis:auto; height:190px; } h1 { font-size:24px; } }
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <div class="row">
+    <h1><span>AI</span> News</h1>
+    <input id="q" placeholder="Search, e.g. runway, claude, suno">
+    <select id="when"><option value="0">Any time</option><option value="1">Today</option><option value="3">Last 3 days</option><option value="7" selected>This week</option></select>
+    <select id="src"><option value="">All sources</option></select>
+    <span class="view"><button data-v="list">☰ List</button> <button data-v="grid">▦ Tiles</button></span>
+    <button id="refresh">↻ Refresh</button>
+  </div>
+  <div id="tags"></div>
+  <div id="info">Loading…</div>
+</div></header>
+<main id="list" class="list"><div class="end">Loading…</div></main>
+<footer>
+  <p><b>About.</b> AI News collects headlines and short excerpts from public news feeds and links to the original articles. All articles, excerpts and images belong to their publishers. Updated every 15 minutes.</p>
+  <p><b>Privacy.</b> This site uses no cookies, no tracking and no analytics. Your list/tiles choice is stored only in your own browser. Article images are loaded directly from the publishers' websites.</p>
+  <details><summary>Sources</summary><ul id="status"></ul></details>
+</footer>
+<script>
+const $ = (s) => document.querySelector(s);
+let data = null, active = "Latest", shown = 60;
+let view = "list"; try { view = localStorage.getItem("view") || "list"; } catch {}
+const ago = (d) => { if (!d) return ""; const m = (Date.now() - new Date(d)) / 60000; if (m < 60) return Math.max(1, m | 0) + " min ago"; if (m < 1440) { const h = m / 60 | 0; return h + (h === 1 ? " hour ago" : " hours ago"); } const dd = m / 1440 | 0; return dd === 1 ? "yesterday" : dd + " days ago"; };
+const esc = (s = "") => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+async function load(q = "") {
+  try { data = await (await fetch("news.json" + q, { cache: "no-cache" })).json(); } catch { if (!data) $("#info").textContent = "Could not load the news."; return; }
+  const srcs = [...new Set(data.items.map((i) => i.source))].sort((a, b) => a.localeCompare(b));
+  const cur = $("#src").value;
+  $("#src").innerHTML = '<option value="">All sources (' + srcs.length + ')</option>' + srcs.map((s) => `<option ${s === cur ? "selected" : ""}>${esc(s)}</option>`).join("");
+  $("#status").innerHTML = data.status.slice().sort((a, b) => a.name.localeCompare(b.name)).map((s) => `<li class="${s.ok ? "" : "bad"}">${esc(s.name)}: ${s.ok ? s.n + " items" : "unavailable (" + esc(s.error) + ")"}</li>`).join("");
+  render();
+  if (data.busy) load("?wait");          // local server is fetching new items: update when done
+}
+
+function render() {
+  const q = $("#q").value.trim().toLowerCase(), days = +$("#when").value, src = $("#src").value;
+  const base = data.items.filter((i) => (!days || (i.date && Date.now() - new Date(i.date) < days * 864e5)) && (!src || i.source === src) && (!q || (i.title + " " + i.text + " " + i.source).toLowerCase().includes(q)));
+  const counts = { Latest: base.length };
+  base.forEach((i) => i.tags.forEach((t) => (counts[t] = (counts[t] || 0) + 1)));
+  const names = ["Latest", ...Object.keys(counts).filter((k) => k !== "Latest").sort((a, b) => counts[b] - counts[a])];
+  if (!counts[active]) active = "Latest";
+  $("#tags").innerHTML = names.map((n) => `<span class="chip ${n === active ? "on" : ""}" data-t="${esc(n)}">${esc(n)}<span>${counts[n] || 0}</span></span>`).join("");
+  const all = active === "Latest" ? base : base.filter((i) => i.tags.includes(active));
+  const items = all.slice(0, shown);
+  $("#list").className = view;
+  document.querySelectorAll(".view button").forEach((b) => b.classList.toggle("on", b.dataset.v === view));
+  $("#list").innerHTML = items.length ? items.map((i, n) => `
+    <article class="item">
+      <a class="pic ${i.img ? "" : "none"}" href="${esc(i.link)}" target="_blank" rel="noopener">${i.img ? `<img src="${esc(i.img)}" loading="${n < 8 ? "eager" : "lazy"}" decoding="async" referrerpolicy="no-referrer" alt="" onerror="this.parentNode.classList.add('none');this.parentNode.textContent=this.parentNode.dataset.s" >` : esc(i.source)}</a>
+      <div class="txt">
+        <div class="meta"><b>${esc(i.source)}</b> · ${ago(i.date)}</div>
+        <h2 class="title"><a href="${esc(i.link)}" target="_blank" rel="noopener">${esc(i.title)}</a></h2>
+        ${i.text ? `<p class="text">${esc(i.text)}</p>` : ""}
+        <div class="foot"><a class="more" href="${esc(i.link)}" target="_blank" rel="noopener">Read more →</a><span class="t">${i.tags.map(esc).join(" · ")}</span></div>
+      </div>
+    </article>`).join("") + (all.length > shown ? `<div class="end"><button id="moreBtn">Load more (${all.length - shown})</button></div>` : "")
+    : '<div class="end">Nothing found with these filters.</div>';
+  document.querySelectorAll(".pic").forEach((p, k) => (p.dataset.s = items[k]?.source ?? ""));
+  if (data.partial) { $("#info").textContent = "Loading the rest…"; return; }
+  $("#info").textContent = `${all.length} stories · ${srcs()} sources · updated ${new Date(data.updated).toLocaleString("en-GB", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" })}${data.busy ? " · fetching new stories…" : ""}`;
+}
+const srcs = () => new Set(data.items.map((i) => i.source)).size;
+
+const reset = () => { shown = 60; render(); window.scrollTo(0, 0); };
+$("#tags").onclick = (e) => { const c = e.target.closest(".chip"); if (c) { active = c.dataset.t; reset(); } };
+$("#q").oninput = $("#when").onchange = $("#src").onchange = reset;
+$("#list").onclick = (e) => { if (e.target.id === "moreBtn") { shown += 60; render(); } };
+document.querySelector(".view").onclick = (e) => { const b = e.target.closest("button"); if (b) { view = b.dataset.v; try { localStorage.setItem("view", view); } catch {} render(); } };
+$("#refresh").onclick = () => load("?refresh");
+
+// the first stories are already inside the page: show them at once, load the rest right after
+const FIRST = /*FIRST*/null;
+if (FIRST) { data = FIRST; render(); }
+load();
+setInterval(() => load(), 10 * 60e3);
+</script>
+</body>
+</html>
