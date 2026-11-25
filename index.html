@@ -5,30 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI News</title>
 <meta name="description" content="All the latest AI news from hundreds of sources, sorted by topic: video and animation, images, music, code, models, agents and more.">
+<script>try { var t = localStorage.getItem("theme"); if (t === "dark" || t === "light") document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <style>
-  :root { --bg:#ffffff; --paper:#f6f5f1; --text:#1a1a1a; --mute:#6b6b6b; --line:#e3e1db; --link:#0b4f8a; --red:#c0261d; }
+  /* light mode (newspaper) */
+  :root { color-scheme:light; --bg:#ffffff; --paper:#f6f5f1; --card:#ffffff; --text:#1a1a1a; --body:#3a3a3a; --mute:#6b6b6b; --faint:#888888; --line:#e3e1db; --field:#cfccc4; --link:#0b4f8a; --red:#c0261d; --on:#ffffff; --chip:#333333; --count:#999999; --count-on:#bbbbbb; --ph:#aaa59a; }
+  /* dark mode: when the device is set to dark (unless Light was chosen), or when Dark was chosen */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { color-scheme:dark; --bg:#121211; --paper:#24231f; --card:#1a1917; --text:#ebe8e2; --body:#c9c5bd; --mute:#a19d94; --faint:#8a867e; --line:#2e2c28; --field:#47443e; --link:#8ab8ea; --red:#ef6a5e; --on:#121211; --chip:#d6d2ca; --count:#8a867e; --count-on:#6b675f; --ph:#7d7970; }
+  }
+  :root[data-theme="dark"] { color-scheme:dark; --bg:#121211; --paper:#24231f; --card:#1a1917; --text:#ebe8e2; --body:#c9c5bd; --mute:#a19d94; --faint:#8a867e; --line:#2e2c28; --field:#47443e; --link:#8ab8ea; --red:#ef6a5e; --on:#121211; --chip:#d6d2ca; --count:#8a867e; --count-on:#6b675f; --ph:#7d7970; }
   * { box-sizing: border-box; }
   body { margin:0; background:var(--bg); color:var(--text); font:17px/1.55 Georgia, "Times New Roman", serif; }
   header, .meta, .chip, button, select, input, .more, #info, .t, footer, .pic.none { font-family: system-ui, "Segoe UI", Arial, sans-serif; }
-  header { position:sticky; top:0; z-index:5; background:#fff; border-bottom:1px solid var(--line); }
+  header { position:sticky; top:0; z-index:5; background:var(--bg); border-bottom:1px solid var(--line); }
   .bar { max-width:1100px; margin:0 auto; padding:12px 20px 8px; }
   .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
   h1 { margin:0 16px 0 0; font:700 30px/1 Georgia, serif; letter-spacing:-.01em; }
   h1 span { color:var(--red); }
-  input, select, button { background:#fff; color:var(--text); border:1px solid #cfccc4; border-radius:6px; padding:7px 11px; font-size:14px; }
+  input, select, button { background:var(--card); color:var(--text); border:1px solid var(--field); border-radius:6px; padding:7px 11px; font-size:14px; }
   input { flex:1; min-width:180px; }
   button { cursor:pointer; } button:hover { background:var(--paper); }
-  .view button.on { background:var(--text); color:#fff; border-color:var(--text); }
+  .view button.on { background:var(--text); color:var(--on); border-color:var(--text); }
+  #themeBtn { order:1; display:inline-flex; align-items:center; gap:6px; }
+  #themeBtn svg { display:block; flex:none; }
   #info { color:var(--mute); font-size:13px; margin-top:6px; }
   #tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
-  .chip { border:1px solid var(--line); background:#fff; border-radius:4px; padding:3px 10px; font-size:13px; cursor:pointer; user-select:none; color:#333; }
-  .chip span { color:#999; margin-left:3px; }
-  .chip.on { background:var(--text); border-color:var(--text); color:#fff; } .chip.on span { color:#bbb; }
+  .chip { border:1px solid var(--line); background:var(--card); border-radius:4px; padding:3px 10px; font-size:13px; cursor:pointer; user-select:none; color:var(--chip); }
+  .chip span { color:var(--count); margin-left:3px; }
+  .chip.on { background:var(--text); border-color:var(--text); color:var(--on); } .chip.on span { color:var(--count-on); }
 
   main { max-width:1100px; margin:0 auto; padding:8px 20px 40px; }
   .pic { display:block; overflow:hidden; background:var(--paper); border-radius:4px; }
   .pic img { width:100%; height:100%; object-fit:cover; display:block; }
-  .pic.none { display:flex; align-items:center; justify-content:center; color:#aaa59a; font-weight:700; font-size:14px; text-align:center; padding:10px; text-decoration:none; }
+  .pic.none { display:flex; align-items:center; justify-content:center; color:var(--ph); font-weight:700; font-size:14px; text-align:center; padding:10px; text-decoration:none; }
 
   /* list: picture left, text right, one below the other */
   main.list .item { display:flex; gap:22px; padding:22px 0; border-bottom:1px solid var(--line); }
@@ -38,7 +47,7 @@
 
   /* tiles: equal cards */
   main.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:20px; padding-top:20px; }
-  main.grid .item { display:flex; flex-direction:column; border:1px solid var(--line); border-radius:6px; overflow:hidden; background:#fff; }
+  main.grid .item { display:flex; flex-direction:column; border:1px solid var(--line); border-radius:6px; overflow:hidden; background:var(--card); }
   main.grid .pic { height:170px; border-radius:0; flex:none; }
   main.grid .txt { padding:12px 14px 14px; display:flex; flex-direction:column; flex:1; }
   main.grid .title { font-size:18px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
@@ -51,11 +60,11 @@
   .meta b { color:var(--red); font-weight:700; }
   .title { line-height:1.25; font-weight:700; margin:0 0 6px; }
   .title a { color:var(--text); text-decoration:none; } .title a:hover { color:var(--link); text-decoration:underline; }
-  .text { color:#3a3a3a; font-size:16.5px; margin:0 0 8px; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
+  .text { color:var(--body); font-size:16.5px; margin:0 0 8px; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
   .foot { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
   .more { color:var(--link); font-size:14px; font-weight:600; text-decoration:none; }
   .more:hover { text-decoration:underline; }
-  .t { font-size:12px; color:#888; }
+  .t { font-size:12px; color:var(--faint); }
   .end { padding:40px 0; text-align:center; color:var(--mute); }
   footer { max-width:1100px; margin:0 auto 40px; padding:16px 20px 0; border-top:1px solid var(--line); color:var(--mute); font-size:13px; line-height:1.6; }
   footer li.bad { color:var(--red); }
@@ -70,7 +79,9 @@
     h1 { font-size:21px; margin:0; white-space:nowrap; }
     input { min-width:0; padding:7px 9px; font-size:16px; }
     #filtersBtn { display:block; flex:none; padding:7px 10px; }
-    #filtersBtn[aria-expanded="true"] { background:var(--text); color:#fff; border-color:var(--text); }
+    #filtersBtn[aria-expanded="true"] { background:var(--text); color:var(--on); border-color:var(--text); }
+    #themeBtn { order:0; flex:none; padding:7px 9px; }
+    #themeBtn .lbl { display:none; }
     .controls { display:none; }
     .controls.open { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding-top:8px; flex:0 0 100%; }
     .controls.open select { width:100%; min-width:0; }
@@ -101,6 +112,7 @@
     <h1><span>AI</span> News</h1>
     <input id="q" type="search" placeholder="Search, e.g. runway, claude, suno">
     <button id="filtersBtn" aria-expanded="false">Filters</button>
+    <button id="themeBtn" type="button"></button>
     <div class="controls">
     <select id="when"><option value="0">Any time</option><option value="1">Today</option><option value="3">Last 3 days</option><option value="7" selected>This week</option></select>
     <select id="src"><option value="">All sources</option></select>
@@ -114,7 +126,7 @@
 <main id="list" class="list"><div class="end">Loading…</div></main>
 <footer>
   <p><b>About.</b> AI News collects headlines and short excerpts from public news feeds and links to the original articles. All articles, excerpts and images belong to their publishers. Updated every 15 minutes.</p>
-  <p><b>Privacy.</b> This site uses no cookies, no tracking and no analytics. Your list/tiles choice is stored only in your own browser. Article images are loaded directly from the publishers' websites.</p>
+  <p><b>Privacy.</b> This site uses no cookies, no tracking and no analytics. Your list/tiles and light/dark choices are stored only in your own browser. Article images are loaded directly from the publishers' websites.</p>
   <details><summary>Sources</summary><ul id="status"></ul></details>
 </footer>
 <script>
@@ -171,6 +183,22 @@ $("#list").onclick = (e) => { if (e.target.id === "moreBtn") { shown += 60; rend
 document.querySelector(".view").onclick = (e) => { const b = e.target.closest("button"); if (b) { view = b.dataset.v; try { localStorage.setItem("view", view); } catch {} render(); } };
 $("#refresh").onclick = () => load("?refresh");
 $("#filtersBtn").onclick = () => { const open = $(".controls").classList.toggle("open"); $("#filtersBtn").setAttribute("aria-expanded", open); };
+
+// light / dark: follows the device setting until you click the button, then your choice is remembered
+const darkMq = matchMedia("(prefers-color-scheme: dark)");
+const isDark = () => (document.documentElement.dataset.theme || (darkMq.matches ? "dark" : "light")) === "dark";
+const ICON = (d) => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const MOON = ICON('<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>');
+const SUN = ICON('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>');
+function showTheme() {
+  const d = isDark(), b = $("#themeBtn");
+  b.innerHTML = d ? SUN + '<span class="lbl">Light</span>' : MOON + '<span class="lbl">Dark</span>';
+  b.title = d ? "Switch to light mode" : "Switch to dark mode";
+  b.setAttribute("aria-label", b.title);
+}
+$("#themeBtn").onclick = () => { const t = isDark() ? "light" : "dark"; document.documentElement.dataset.theme = t; try { localStorage.setItem("theme", t); } catch {} showTheme(); };
+darkMq.addEventListener?.("change", showTheme);
+showTheme();
 
 // the first stories are already inside the page: show them at once, load the rest right after
 const FIRST = /*FIRST*/null;
