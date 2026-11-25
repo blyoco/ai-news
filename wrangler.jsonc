@@ -1,1 +1,9 @@
-﻿{ "name": "ainews", "compatibility_date": "2026-11-19", "assets": { "directory": "./dist" } }
+﻿{
+  "name": "ainews",
+  "compatibility_date": "2026-11-19",
+  "main": "worker.js",
+  "assets": { "directory": "./dist", "binding": "ASSETS" },
+  // Cloudflare geeft elke 15 minuten het startsein (zie worker.js); de GitHub-klok is daar te onbetrouwbaar voor
+  "triggers": { "crons": ["*/15 * * * *"] },
+  "vars": { "GH_REPO": "blyoco/ai-news" }
+}

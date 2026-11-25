@@ -1,9 +1,11 @@
-# Haalt elke 15 minuten het nieuws op en zet de site live op Cloudflare.
+# Haalt het nieuws op en zet de site live op Cloudflare.
+# Het startsein komt elke 15 minuten van de Cloudflare Worker (worker.js, via workflow_dispatch).
+# De GitHub-klok hieronder is alleen reserve: GitHub slaat geplande runs vaak urenlang over.
 # Nodig: GitHub-secret CLOUDFLARE_API_TOKEN (zie README.md).
 name: update news
 on:
   schedule:
-    - cron: "7,22,37,52 * * * *"
+    - cron: "37 * * * *"
   workflow_dispatch:
   push:
     branches: [main]
